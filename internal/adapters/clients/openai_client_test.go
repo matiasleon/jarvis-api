@@ -21,7 +21,7 @@ func TestWhenGetOpenAIResponseInvokeCorrectlyMustReturnSimpleString(t *testing.T
 	openaiClient := NewOpenAI(server.URL)
 
 	// execute
-	result, err := openaiClient.getOpenAIResponse("test input")
+	result, err := openaiClient.GetOpenAIResponse("test input")
 
 	// assert
 	assert.EqualValues(t, "Hello", result)
