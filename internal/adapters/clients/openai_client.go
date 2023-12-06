@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 )
@@ -48,8 +49,6 @@ func (oc *openAIClient) GetOpenAIResponse(inputText string) (string, error) {
 	//do api call
 	response, err := oc.client.Do(request)
 
-	fmt.Println(response.Status)
-
 	if err != nil {
 		fmt.Println("Error making request:", err)
 		return "", err
@@ -72,7 +71,7 @@ func (oc *openAIClient) handleResponse(response http.Response) (string, error) {
 	if response.StatusCode != http.StatusOK {
 		fmt.Println("Error calling openai")
 
-		jsonData, err := json.Marshal(response.Body)
+		jsonData, err := io.ReadAll(response.Body)
 		if err != nil {
 			return "", err
 		}
@@ -89,7 +88,7 @@ func (oc *openAIClient) handleOkeyResponse(response http.Response) (string, erro
 	err := json.NewDecoder(response.Body).Decode(&openAiResponse)
 
 	if err != nil {
-		fmt.Println("Error reading response body:", err)
+		fmt.Println("Error reading response body: ", err)
 		return "", nil
 	}
 

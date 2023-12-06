@@ -15,8 +15,9 @@ func createOpenAiRequest(inputText string) OpenAiRequest {
 	}
 
 	return OpenAiRequest{
-		Model:    OpenAIModel,
-		Messages: messages,
+		Model:     OpenAIModel,
+		Messages:  messages,
+		MaxTokens: 500,
 	}
 }
 
