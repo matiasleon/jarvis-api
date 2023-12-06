@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 )
 
@@ -24,15 +23,14 @@ func (ah *ReplyHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, err := io.ReadAll(r.Body)
+	var messageInput MessageInput
+	err := json.NewDecoder(r.Body).Decode(&messageInput)
 	if err != nil {
 		http.Error(w, "Error reading request body", http.StatusBadRequest)
 		return
 	}
 
-	inputText := string(body)
-
-	response, err := ah.replyUseCase.Reply(inputText)
+	response, err := ah.replyUseCase.Reply(messageInput.Message)
 	if err != nil {
 		http.Error(w, "Error getting response", http.StatusInternalServerError)
 		return

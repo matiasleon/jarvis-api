@@ -18,3 +18,13 @@ Jarvis es una aplicación de asistente personal que utiliza el lenguaje de progr
 
 - Go 1.20 o superior
 
+## Como probarlo
+
+#### curl
+   ```bash
+  curl -X POST localhost:8080/reply -d '{"message":"hola"}''
+   ```
+#### Respuesta
+   ```bash
+  {"response":"¡Hola! ¿Cómo puedo ayudarte hoy?"}
+   ```
