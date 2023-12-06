@@ -3,8 +3,8 @@ package clients
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 )
@@ -48,12 +48,14 @@ func (oc *openAIClient) GetOpenAIResponse(inputText string) (string, error) {
 	//do api call
 	response, err := oc.client.Do(request)
 
+	fmt.Println(response.Status)
+
 	if err != nil {
 		fmt.Println("Error making request:", err)
 		return "", err
 	}
 
-	responseString, err := oc.handleResponse(response.Body)
+	responseString, err := oc.handleResponse(*response)
 
 	if err != nil {
 		fmt.Println("Error handling response:", err)
@@ -65,12 +67,26 @@ func (oc *openAIClient) GetOpenAIResponse(inputText string) (string, error) {
 	return responseString, nil
 }
 
-func (oc *openAIClient) handleResponse(body io.ReadCloser) (response string, err error) {
+func (oc *openAIClient) handleResponse(response http.Response) (string, error) {
 
+	if response.StatusCode != http.StatusOK {
+		fmt.Println("Error calling openai")
+
+		jsonData, err := json.Marshal(response.Body)
+		if err != nil {
+			return "", err
+		}
+		fmt.Println("Status code: " + response.Status + "desc: " + string(jsonData))
+
+		return "", errors.New("error calling OPEN AI")
+	}
+
+	return oc.handleOkeyResponse(response)
+}
+
+func (oc *openAIClient) handleOkeyResponse(response http.Response) (string, error) {
 	var openAiResponse openAiResponse
-	err = json.NewDecoder(body).Decode(&openAiResponse)
-
-	fmt.Println(openAiResponse.ID)
+	err := json.NewDecoder(response.Body).Decode(&openAiResponse)
 
 	if err != nil {
 		fmt.Println("Error reading response body:", err)

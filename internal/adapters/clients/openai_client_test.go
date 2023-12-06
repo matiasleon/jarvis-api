@@ -28,6 +28,26 @@ func TestWhenGetOpenAIResponseInvokeCorrectlyMustReturnSimpleString(t *testing.T
 	assert.NoError(t, err)
 }
 
+func TestWhenGetOpenAIResponseInvokeBadRequestMustReturnError(t *testing.T) {
+
+	// init
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "some bad request desc", http.StatusBadRequest)
+		return
+
+	}))
+	defer server.Close()
+
+	openaiClient := NewOpenAI(server.URL)
+
+	// execute
+	result, err := openaiClient.GetOpenAIResponse("test input")
+
+	// assert
+	assert.EqualValues(t, "", result)
+	assert.Error(t, err)
+}
+
 func fakeResponse() string {
 	return `{
 		"id": "chatcmpl-123",
