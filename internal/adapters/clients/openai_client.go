@@ -23,9 +23,9 @@ func NewOpenAI(endpoint string) openAIClient {
 	return openAIClient{endpoint: endpoint, client: client}
 }
 
-func (oc *openAIClient) GetOpenAIResponse(inputText string) (string, error) {
+func (oc *openAIClient) GetOpenAIResponse(context, inputText string) (string, error) {
 	// create request body
-	requestBody := createOpenAiRequest(inputText)
+	requestBody := createOpenAiRequest(context, inputText)
 	requestJson, err := json.Marshal(requestBody)
 	if err != nil {
 		fmt.Println("Error marshaling JSON:", err)

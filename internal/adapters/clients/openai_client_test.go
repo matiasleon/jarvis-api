@@ -21,7 +21,7 @@ func TestWhenGetOpenAIResponseInvokeCorrectlyMustReturnSimpleString(t *testing.T
 	openaiClient := NewOpenAI(server.URL)
 
 	// execute
-	result, err := openaiClient.GetOpenAIResponse("test input")
+	result, err := openaiClient.GetOpenAIResponse("context", "test input")
 
 	// assert
 	assert.EqualValues(t, "Hello", result)
@@ -41,7 +41,7 @@ func TestWhenGetOpenAIResponseInvokeBadRequestMustReturnError(t *testing.T) {
 	openaiClient := NewOpenAI(server.URL)
 
 	// execute
-	result, err := openaiClient.GetOpenAIResponse("test input")
+	result, err := openaiClient.GetOpenAIResponse("context", "test input")
 
 	// assert
 	assert.EqualValues(t, "", result)
