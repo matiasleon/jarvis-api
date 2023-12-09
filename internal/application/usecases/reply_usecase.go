@@ -2,23 +2,27 @@ package usecases
 
 import "fmt"
 
+type cryptoClient interface {
+	GetUSDTPrice() (int, error)
+}
+
 type openaiClient interface {
 	GetOpenAIResponse(context, inputText string) (string, error)
 }
 
 type replyUseCase struct {
 	openaiClient openaiClient
+	cryptoClient cryptoClient
 }
 
-func NewReply(openaiClient openaiClient) replyUseCase {
-	return replyUseCase{openaiClient: openaiClient}
+func NewReply(openaiClient openaiClient, cryptoClient cryptoClient) replyUseCase {
+	return replyUseCase{
+		openaiClient: openaiClient,
+		cryptoClient: cryptoClient,
+	}
 }
 
 func (ru *replyUseCase) Reply(inputMessage string) (string, error) {
-
-	// anteriormente podemos obtener la "conciencia" de jarvis
-	// osea el contexto para open ai
-	// obtener tambien todos el historico de mensajes anteriores
 
 	context := ru.getContextJarvis()
 
@@ -33,5 +37,6 @@ func (ru *replyUseCase) Reply(inputMessage string) (string, error) {
 }
 
 func (ru *replyUseCase) getContextJarvis() string {
-	return "Sos un asistidor financiero. Te llamas Jarvis. Sos un poco gracioso. El usdt sale 1000 pesos argentinos"
+	return "Sos un asistidor financiero. Te llamas Jarvis. Tenes una personalidada motivaodra, positiva y graciosa. Solo entendes de " +
+		"inversiones. El usdt sale 1000 pesos argentinos."
 }

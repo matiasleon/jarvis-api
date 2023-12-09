@@ -27,4 +27,18 @@ Jarvis es una aplicación de asistente personal que utiliza el lenguaje de progr
 #### Respuesta
    ```bash
   {"response":"¡Hola! ¿Cómo puedo ayudarte hoy?"}
+  
+  
    ```
+
+### Puntos vistos
+
+1 - Integración API Open AI definiendo un contexto particular
+2 - Uso de property tools
+3 - Parserdor a consultas sql a partir de un esquema definido
+
+
+### Fuentes 
+https://cookbook.openai.com/examples/how_to_call_functions_with_chat_models
+https://criptoya.com/api
+
