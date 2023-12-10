@@ -27,10 +27,9 @@ func NewReply(openaiClient openaiClient, cryptoClient cryptoClient) replyUseCase
 
 func (ru *replyUseCase) Reply(inputMessage string) (string, error) {
 
-	context := domain.NewJarvisContextBuilder(domain.InitialJarvisContext)
-	contextString := context.Build()
+	context := domain.NewJarvisContextBuilder(domain.InitialJarvisContext).Build()
 
-	response, err := ru.openaiClient.GetOpenAIResponse(contextString, inputMessage)
+	response, err := ru.openaiClient.GetOpenAIResponse(context, inputMessage)
 
 	if err != nil {
 		fmt.Println("Error reading response body:", err)
