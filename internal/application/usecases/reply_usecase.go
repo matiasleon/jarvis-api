@@ -1,13 +1,14 @@
 package usecases
 
 import (
+	"encoding/json"
 	"fmt"
+	"main/internal/adapters/clients"
 	"main/internal/application/domain"
-	"strconv"
 )
 
 type cryptoClient interface {
-	GetUSDTPrice() (float64, error)
+	GetUSDTMarketsPrice() (*clients.ExchangeResponse, error)
 }
 
 type openaiClient interface {
@@ -28,14 +29,22 @@ func NewReply(openaiClient openaiClient, cryptoClient cryptoClient) replyUseCase
 
 func (ru *replyUseCase) Reply(inputMessage string) (string, error) {
 
-	usdtValue, err := ru.cryptoClient.GetUSDTPrice()
-
+	exchangesValues, err := ru.cryptoClient.GetUSDTMarketsPrice()
 	if err != nil {
-		fmt.Println("Error getting usdt price")
+		fmt.Println("Error getting usdt exchanges values")
 	}
 
-	stringValue := strconv.FormatFloat(usdtValue, 'f', -1, 64)
-	context := domain.NewJarvisContextBuilder(domain.InitialJarvisContext).Append("usdt vale" + stringValue).Build()
+	// Convert the struct to JSON
+	jsonData, err := json.Marshal(exchangesValues)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return "", err
+	}
+
+	context := domain.NewJarvisContextBuilder(domain.InitialJarvisContext).
+		Append("Los valores de usdt son " + string(jsonData)).
+		Append(exchangesValues.PropertiesGlossary()).
+		Build()
 
 	response, err := ru.openaiClient.GetOpenAIResponse(context, inputMessage)
 

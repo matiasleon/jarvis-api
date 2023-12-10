@@ -19,19 +19,14 @@ func NewCrypto(endpoint string) cryptoClient {
 	return cryptoClient{endpoint: endpoint, client: client}
 }
 
-func (cc *cryptoClient) GetUSDTPrice() (float64, error) {
+func (cc *cryptoClient) GetUSDTMarketsPrice() (*ExchangeResponse, error) {
 
 	// do http request
-	exchangeResponse, err := cc.getExchangesValuesForUSDT()
+	return cc.getExchangesValuesForUSDT()
 
-	if err != nil {
-		return 0, err
-	}
-
-	return exchangeResponse.Binance.Ask, nil
 }
 
-func (cc *cryptoClient) getExchangesValuesForUSDT() (*exchangeResponse, error) {
+func (cc *cryptoClient) getExchangesValuesForUSDT() (*ExchangeResponse, error) {
 	// do http request
 	response, err := cc.client.Get(cc.endpoint)
 
@@ -46,7 +41,7 @@ func (cc *cryptoClient) getExchangesValuesForUSDT() (*exchangeResponse, error) {
 	}
 
 	// handling okey
-	var exchangeResponse exchangeResponse
+	var exchangeResponse ExchangeResponse
 	err = json.NewDecoder(response.Body).Decode(&exchangeResponse)
 
 	if err != nil {
