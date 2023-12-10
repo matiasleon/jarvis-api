@@ -10,3 +10,7 @@ type marketData struct {
 	Ask      float64 `json:"ask"`
 	TotalAsk float64 `json:"totalAsk"`
 }
+
+func (e *exchangeResponse) giveMeTheCheaper() {
+
+}
