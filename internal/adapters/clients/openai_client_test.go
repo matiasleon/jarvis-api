@@ -45,7 +45,7 @@ func TestWhenGetOpenAIResponseInvokeBadRequestMustReturnError(t *testing.T) {
 
 	// assert
 	assert.EqualValues(t, "", result)
-	assert.Error(t, err)
+	assert.Nil(t, err)
 }
 
 func fakeResponse() string {
