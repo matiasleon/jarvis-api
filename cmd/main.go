@@ -11,8 +11,11 @@ import (
 
 func main() {
 
+	// clients
 	openAiClient := clients.NewOpenAI(clients.OpenAiUrl)
-	replyUseCase := usecases.NewReply(&openAiClient)
+	cryptoClient := clients.NewCrypto(clients.CryptoMarketEndpoint)
+
+	replyUseCase := usecases.NewReply(&openAiClient, &cryptoClient)
 	replyHandler := handlers.NewReply(&replyUseCase)
 
 	http.HandleFunc("/reply", replyHandler.Handle)

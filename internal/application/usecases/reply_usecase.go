@@ -3,10 +3,11 @@ package usecases
 import (
 	"fmt"
 	"main/internal/application/domain"
+	"strconv"
 )
 
 type cryptoClient interface {
-	GetUSDTPrice() (int, error)
+	GetUSDTPrice() (float64, error)
 }
 
 type openaiClient interface {
@@ -27,7 +28,14 @@ func NewReply(openaiClient openaiClient, cryptoClient cryptoClient) replyUseCase
 
 func (ru *replyUseCase) Reply(inputMessage string) (string, error) {
 
-	context := domain.NewJarvisContextBuilder(domain.InitialJarvisContext).Build()
+	usdtValue, err := ru.cryptoClient.GetUSDTPrice()
+
+	if err != nil {
+		fmt.Println("Error getting usdt price")
+	}
+
+	stringValue := strconv.FormatFloat(usdtValue, 'f', -1, 64)
+	context := domain.NewJarvisContextBuilder(domain.InitialJarvisContext).Append("usdt vale" + stringValue).Build()
 
 	response, err := ru.openaiClient.GetOpenAIResponse(context, inputMessage)
 
